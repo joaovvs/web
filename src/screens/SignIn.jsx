@@ -38,7 +38,7 @@ export function SignIn() {
     <ScrollView flex={1} bg={"gray.600"} py={16} px={12}>
       <VStack mb={20}>
         <Center>
-          <LogoSvg />
+          <LogoSvg/>
           <MarketplaceSVg />
           <Text color={"gray.300"} fontFamily={"body"} fontSize={"sm"}>
             Seu espaço de compra e venda
