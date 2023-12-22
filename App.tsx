@@ -1,20 +1,25 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NativeBaseProvider} from 'native-base';
+import { useFonts, Karla_700Bold, Karla_400Regular } from '@expo-google-fonts/karla';
+
+import { THEME } from './src/theme';
+import { Loading } from '@components/Loading';
+import { isLoaded } from 'expo-font';
+import { SignIn } from '@screens/SignIn';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({Karla_700Bold, Karla_400Regular});
+  
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NativeBaseProvider theme={THEME}>
+      <StatusBar 
+        backgroundColor='transparent'
+        style='dark'
+        translucent
+      />
+        {!isLoaded ? <Loading/> :
+        <SignIn/>}
+    </NativeBaseProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
