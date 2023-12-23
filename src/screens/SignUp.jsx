@@ -8,7 +8,7 @@ import {
   ScrollView,
   Heading,
   Text,
-  Pressable,
+  Pressable
 } from "native-base";
 
 import { Eye, EyeSlash } from "phosphor-react-native";
@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { ProfileEditor } from "@components/Profile";
 
 export function SignUp() {
   const [show, setShow] = useState(false);
@@ -62,7 +63,10 @@ export function SignUp() {
       </VStack>
 
       <ScrollView showsVerticalScrollIndicator={false}>
-        <VStack>
+
+        <ProfileEditor />
+        <VStack mt={4}>
+
           <Controller
             control={control}
             name="name"

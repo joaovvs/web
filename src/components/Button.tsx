@@ -11,14 +11,14 @@ import {
   Power,
   Tag,
   ArrowLeft,
+
 } from "phosphor-react-native";
 
 import { useTheme } from "native-base";
-import { Feather, FontAwesome } from "@expo/vector-icons";
 
 type Props = IButtonProps & {
   title: string;
-  type?: "default" | "contact" | "trash" | "power" | "tag" | "back";
+  type?: "default" | "contact" | "trash" | "power" | "tag" | "back" ;
   variant?: "black" | "blue" | "gray";
 };
 
