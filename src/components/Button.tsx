@@ -11,14 +11,14 @@ import {
   Power,
   Tag,
   ArrowLeft,
-
+  Plus
 } from "phosphor-react-native";
 
 import { useTheme } from "native-base";
 
 type Props = IButtonProps & {
   title: string;
-  type?: "default" | "contact" | "trash" | "power" | "tag" | "back" ;
+  type?: "default" | "contact" | "trash" | "power" | "tag" | "back" | 'add';
   variant?: "black" | "blue" | "gray";
 };
 
@@ -64,6 +64,8 @@ export function Button({title,type = "default", variant = "black", ...rest}: Pro
         return <Tag size={16} color={contentColorSwitch()} />;
       case "back":
         return <ArrowLeft size={16} color={contentColorSwitch()} />;
+      case "add":
+        return <Plus size={16} color={contentColorSwitch()} />;
       default:
         return "";
     }
@@ -75,6 +77,7 @@ export function Button({title,type = "default", variant = "black", ...rest}: Pro
       padding={3}
       alignItems={"center"}
       bgColor={bgColorSwitch()}
+      borderRadius={'lg'}
       {...rest}
     >
       <HStack alignItems={"center"}>

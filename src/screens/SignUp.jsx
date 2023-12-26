@@ -17,7 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
-import { ProfileEditor } from "@components/Profile";
+import { ProfileEditor } from "@components/ProfileEditor";
 
 export function SignUp() {
   const [show, setShow] = useState(false);
@@ -163,7 +163,7 @@ export function SignUp() {
           <Button title="Criar" variant={"black"} />
         </VStack>
 
-        <VStack mt={12}>
+        <VStack mt={12} mb={16}>
           <Center>
             <Heading fontFamily={"body"} fontSize={"sm"} mb={4}>
               Já tem uma conta?
