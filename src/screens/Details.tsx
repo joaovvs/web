@@ -10,12 +10,12 @@ import {
   Text,
   useTheme,
   Heading,
-  Button as BackButton,
-  FlatList,
+  Button as NativeButton,
+  Box,
 } from "native-base";
 import productImg from "@assets/product.png";
 
-import { ArrowLeft } from "phosphor-react-native";
+import { ArrowLeft, PencilSimpleLine } from "phosphor-react-native";
 import { Payments } from "@components/Payments";
 import { AcceptedPaymentsMode } from "src/@types/payments";
 import { Button } from "@components/Button";
@@ -39,6 +39,8 @@ export function Details() {
     { type: "card" },
     { type: "deposit" },
   ]);
+
+  const isActive = true;
 
   const [images, setImages] = useState([
     productImg,
@@ -122,34 +124,76 @@ export function Details() {
     );
   };
 
+  function checkUserIsOwner() {
+    return false;
+  }
+
   return (
-    <VStack flex={1}>
+    <VStack flex={1} mt={5}>
+
       {/* Header*/}
-      <HStack ml={7} mt={5}>
-        <BackButton alignSelf={"flex-start"} background={"transparent"}>
-          <ArrowLeft color={theme.colors.gray[100]} />
-        </BackButton>
+      <HStack px={6} alignItems={"center"} justifyContent={"space-between"}>
+
+        <NativeButton alignItems={"center"} background={"transparent"}>
+          <ArrowLeft  color={theme.colors.gray[100]} size={24}/>
+        </NativeButton>
+
+        {checkUserIsOwner() && (
+          <NativeButton alignItems={"center"} background={"transparent"}>
+            <PencilSimpleLine color={theme.colors.gray[100]} size={24}/>
+          </NativeButton>
+        )}
       </HStack>
 
       {/*Content  */}
-      <VStack flex={1} mb={25}>
+      <VStack flex={1}>
         {/*Image Carousel*/}
-        <Carousel
-          loop
-          width={width}
-          height={280}
-          autoPlay={false}
-          data={images}
-          pagingEnabled={true}
-          onProgressChange={(_, absoluteProgress) =>
-            (progressValue.value = absoluteProgress)
-          }
-          scrollAnimationDuration={1000}
-          onSnapToItem={(index) => console.log("current index:", index)}
-          renderItem={({ item, index }) => (
-            <Image source={item} alt="Foto do item" />
+        <Box
+          position={"relative"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Carousel
+            loop
+            width={width}
+            height={280}
+            autoPlay={false}
+            data={images}
+            pagingEnabled={true}
+            onProgressChange={(_, absoluteProgress) =>
+              (progressValue.value = absoluteProgress)
+            }
+            scrollAnimationDuration={1000}
+            onSnapToItem={(index) => console.log("current index:", index)}
+            renderItem={({ item, index }) => (
+              <Image source={item} alt="Foto do item" resizeMode="cover"/>
+            )}
+          />
+
+          {/*Overflow image if is not active*/}
+          {!isActive && (
+            <Box
+              bg={"gray.100"}
+              opacity={0.6}
+              position={"absolute"}
+              top={0}
+              right={0}
+              bottom={0}
+              left={0}
+            />
           )}
-        />
+          {!isActive && (
+            <Text
+              position={"absolute"}
+              textTransform={"uppercase"}
+              fontFamily={"heading"}
+              fontSize={"sm"}
+              color={"gray.700"}
+            >
+              Anúncio desativado
+            </Text>
+          )}
+        </Box>
         <HStack justifyContent={"center"} mt={-2} mb={2}>
           {images.map((item, index) => {
             return (
@@ -178,77 +222,104 @@ export function Details() {
             </Text>
           </HStack>
 
-            <VStack alignItems={"flex-start"} mb={2}>
-              <Tag variant="gray" type="new" />
-            </VStack>
+          <VStack alignItems={"flex-start"} mb={2}>
+            <Tag variant="gray" type="new" />
+          </VStack>
 
-            <HStack alignItems={"center"}>
-              <Heading
-                flex={1}
-                fontFamily={"heading"}
-                lineHeight={"xl"}
-                fontSize={"lg"}
-                color={"gray.100"}
-              >
-                Bicicleta
-              </Heading>
-              <Text fontSize={"lg"} color={"blue.300"} fontFamily={"heading"}>
-                <Text fontSize={"sm"}>{"R$ "}</Text>
-                120,00
-              </Text>
-            </HStack>
-
-            <Text fontFamily={"body"} fontSize={"sm"} color={"gray.200"} textAlign={"justify"}>
-              Cras congue cursus in tortor sagittis placerat nunc, tellus arcu.
-              Vitae ante leo eget maecenas urna mattis cursus. Mauris metus amet
-              nibh mauris mauris accumsan, euismod. Aenean leo nunc, purus
-              iaculis in aliquam.
+          <HStack alignItems={"center"}>
+            <Heading
+              flex={1}
+              fontFamily={"heading"}
+              lineHeight={"xl"}
+              fontSize={"lg"}
+              color={"gray.100"}
+            >
+              Bicicleta
+            </Heading>
+            <Text fontSize={"lg"} color={"blue.300"} fontFamily={"heading"}>
+              <Text fontSize={"sm"}>{"R$ "}</Text>
+              120,00
             </Text>
+          </HStack>
 
-            <HStack mt={7} mb={4}>
-              <Text fontSize={"sm"} fontFamily={"heading"} color={"gray.200"}>
-                Aceita troca?
-              </Text>
-              <Text
-                fontSize={"sm"}
-                fontFamily={"body"}
-                color={"gray.200"}
-                ml={2}
-              >
-                Sim
-              </Text>
-            </HStack>
-          
-          <VStack>
-            <Heading fontSize={"sm"} fontFamily={"heading"} color={"gray.200"} mb={2}>
+          <Text
+            fontFamily={"body"}
+            fontSize={"sm"}
+            color={"gray.200"}
+            textAlign={"justify"}
+          >
+            Cras congue cursus in tortor sagittis placerat nunc, tellus arcu.
+            Vitae ante leo eget maecenas urna mattis cursus. Mauris metus amet
+            nibh mauris mauris accumsan, euismod. Aenean leo nunc, purus iaculis
+            in aliquam.
+          </Text>
+
+          <HStack mt={7} mb={4}>
+            <Text fontSize={"sm"} fontFamily={"heading"} color={"gray.200"}>
+              Aceita troca?
+            </Text>
+            <Text fontSize={"sm"} fontFamily={"body"} color={"gray.200"} ml={2}>
+              Sim
+            </Text>
+          </HStack>
+
+          <VStack mb={5}>
+            <Heading
+              fontSize={"sm"}
+              fontFamily={"heading"}
+              color={"gray.200"}
+              mb={2}
+            >
               Meios de pagamento:
             </Heading>
-            { acceptedPaymentsMode && acceptedPaymentsMode.map((item,index) => (<Payments key={index} type={item.type} />))}
-              
-            
+            {acceptedPaymentsMode &&
+              acceptedPaymentsMode.map((item, index) => (
+                <Payments key={index} type={item.type} />
+              ))}
           </VStack>
         </ScrollView>
       </VStack>
       {/* Footer Menu */}
 
-      <HStack
-        bgColor={"gray.700"}
-        px={7}
-        py={5}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        alignSelf={"baseline"}
-      >
-        <Text
-          flex={1}
-          fontSize={"xl"}
-          color={"blue.500"}
-          fontFamily={"heading"}
+      {!checkUserIsOwner() ? (
+        <HStack
+          bgColor={"gray.700"}
+          px={7}
+          py={5}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          alignSelf={"baseline"}
         >
-          <Text fontSize={"sm"}>R$</Text>120,00
-        </Text>
-        <Button title="Entrar em contato" type="contact" variant={"blue"} />
-      </HStack>
+          <Text
+            flex={1}
+            fontSize={"xl"}
+            color={"blue.500"}
+            fontFamily={"heading"}
+          >
+            <Text fontSize={"sm"}>R$</Text>120,00
+          </Text>
+          <Button title="Entrar em contato" type="contact" variant={"blue"} />
+        </HStack>
+      ) : (
+        <VStack h={140} bgColor={"gray.700"} px={7} py={5}>
+          {isActive ? (
+            <Button
+              title="Desativar anúncio"
+              variant={"black"}
+              type="power"
+              mb={2}
+            />
+          ) : (
+            <Button
+              title="Reativar anúncio"
+              variant={"blue"}
+              type="power"
+              mb={2}
+            />
+          )}
+          <Button title="Excluir anúncio" variant={"gray"} type="trash" />
+        </VStack>
+      )}
     </VStack>
   );
 }
