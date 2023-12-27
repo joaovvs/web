@@ -5,11 +5,11 @@ import { useFonts, Karla_700Bold, Karla_400Regular } from '@expo-google-fonts/ka
 
 import { THEME } from './src/theme';
 import { Loading } from '@components/Loading';
-import { isLoaded } from 'expo-font';
 
 import { SignIn } from '@screens/SignIn';
 import { SignUp } from '@screens/SignUp';
 import { Home } from '@screens/Home';
+import { Details } from '@screens/Details';
 
 export default function App() {
   const [fontsLoaded] = useFonts({Karla_700Bold, Karla_400Regular});
@@ -22,8 +22,8 @@ export default function App() {
           style='dark'
           translucent
         />
-          {!isLoaded ? <Loading/> :
-            <Home/>}
+          {!fontsLoaded ? <Loading/> :
+            <Details/>}
             </VStack>
       </NativeBaseProvider>
 

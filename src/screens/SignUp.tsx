@@ -77,7 +77,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.email?.message}
+                errorMessage={""}
               />
             )}
           />
@@ -92,7 +92,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.email?.message}
+                errorMessage={""}
               />
             )}
           />
@@ -107,7 +107,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.email?.message}
+                errorMessage={""}
               />
             )}
           />
@@ -120,7 +120,7 @@ export function SignUp() {
                 placeholder="Senha"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.password?.message}
+                errorMessage={""}
                 type={show ? "text" : "password"}
                 InputRightElement={
                   <Pressable mr={4} onPress={() => setShow(!show)}>
@@ -145,7 +145,7 @@ export function SignUp() {
                 value={value}
                 onSubmitEditing={handleSubmit(handleCreate)}
                 returnKeyType="send"
-                errorMessage={errors.password?.message}
+                errorMessage={""}
                 type={show ? "text" : "password"}
                 InputRightElement={
                   <Pressable mr={4} onPress={() => setShowConfirmation(!show)}>

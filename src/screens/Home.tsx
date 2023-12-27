@@ -15,7 +15,7 @@ export function Home(){
 
                 <FlatList
                     data={products}
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item) => item.id.toString()}
                     numColumns={2}
                     renderItem={(item)=> (
                         <Card/>

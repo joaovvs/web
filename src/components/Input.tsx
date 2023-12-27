@@ -2,10 +2,10 @@ import { Input as InputNativeBase, IInputProps, FormControl } from "native-base"
 
 
 type Props = IInputProps & {
-    errorMessage?: string | null;
+    errorMessage: string | null;
 }
 
-export function Input({errorMessage= null, isInvalid, ...rest}: Props){
+export function Input({errorMessage = null, isInvalid, ...rest}: Props){
     const invalid = !!errorMessage || isInvalid;
     return(
         <FormControl isInvalid={invalid} mb={4}>
