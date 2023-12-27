@@ -53,19 +53,20 @@ export function Button({title,type = "default", variant = "black", ...rest}: Pro
   }
 
   function buttonIconRender() {
+    const iconSize = 16;
     switch (type) {
       case "contact":
-        return <WhatsappLogo size={16} color={contentColorSwitch()} weight="fill" />;
+        return <WhatsappLogo size={iconSize} color={contentColorSwitch()} weight="fill" />;
       case "trash":
-        return <TrashSimple size={16} color={contentColorSwitch()} />;
+        return <TrashSimple size={iconSize} color={contentColorSwitch()} />;
       case "power":
-        return <Power size={16} color={contentColorSwitch()} />;
+        return <Power size={iconSize} color={contentColorSwitch()} />;
       case "tag":
-        return <Tag size={16} color={contentColorSwitch()} />;
+        return <Tag size={iconSize} color={contentColorSwitch()} />;
       case "back":
-        return <ArrowLeft size={16} color={contentColorSwitch()} />;
+        return <ArrowLeft size={iconSize} color={contentColorSwitch()} />;
       case "add":
-        return <Plus size={16} color={contentColorSwitch()} />;
+        return <Plus size={iconSize} color={contentColorSwitch()} />;
       default:
         return "";
     }

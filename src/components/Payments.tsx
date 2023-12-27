@@ -8,17 +8,18 @@ export function Payments({type}: AcceptedPaymentsMode){
 
 
     function switchIconByPaymentType(){
+        const iconSize = 18
         switch (type){
             case "ticket":
-                return <Barcode/>
+                return <Barcode size={iconSize}/>
             case "pix":
-                return <QrCode/>
+                return <QrCode size={iconSize}/>
             case 'cash':
-                return <Money/>
+                return <Money size={iconSize}/>
             case 'card':
-                return <CreditCard/>
+                return <CreditCard size={iconSize}/>
             case "deposit":
-                return <Bank/>
+                return <Bank size={iconSize}/>
         }
     }
 
@@ -39,7 +40,7 @@ export function Payments({type}: AcceptedPaymentsMode){
     return(
         <HStack >
             {switchIconByPaymentType()}
-            <Text>{switchTextByPaymentType()}</Text>
+            <Text fontSize={"sm"} fontFamily={"body"} color={"gray.200"} ml={2} mb={1}>{switchTextByPaymentType()}</Text>
         </HStack>
     )
 }
