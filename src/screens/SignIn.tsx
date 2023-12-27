@@ -74,7 +74,7 @@ export function SignIn() {
               autoCapitalize="none"
               onChangeText={onChange}
               value={value}
-              errorMessage={errors.email?.message}
+              errorMessage={errors.root?.message}
             />
           )}
         />
@@ -89,7 +89,7 @@ export function SignIn() {
               value={value}
               onSubmitEditing={handleSubmit(handleSignIn)}
               returnKeyType="send"
-              errorMessage={errors.password?.message}
+              errorMessage={errors.root?.message}
               type={show ? "text" : "password"}
               InputRightElement={
                 <Pressable mr={4} onPress={() => setShow(!show)}>

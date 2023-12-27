@@ -77,7 +77,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={""}
+                errorMessage={errors.root?.message}
               />
             )}
           />
@@ -92,7 +92,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={""}
+                errorMessage={errors.root?.message}
               />
             )}
           />
@@ -107,7 +107,7 @@ export function SignUp() {
                 autoCapitalize="none"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={""}
+                errorMessage={errors.root?.message}
               />
             )}
           />
@@ -145,7 +145,7 @@ export function SignUp() {
                 value={value}
                 onSubmitEditing={handleSubmit(handleCreate)}
                 returnKeyType="send"
-                errorMessage={""}
+                errorMessage={errors.root?.message}
                 type={show ? "text" : "password"}
                 InputRightElement={
                   <Pressable mr={4} onPress={() => setShowConfirmation(!show)}>

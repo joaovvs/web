@@ -26,6 +26,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import Carousel from "react-native-reanimated-carousel";
 
@@ -129,7 +130,7 @@ export function Details() {
   }
 
   return (
-    <VStack flex={1} mt={5}>
+    <SafeAreaView>
 
       {/* Header*/}
       <HStack px={6} alignItems={"center"} justifyContent={"space-between"}>
@@ -320,6 +321,6 @@ export function Details() {
           <Button title="Excluir anúncio" variant={"gray"} type="trash" />
         </VStack>
       )}
-    </VStack>
+    </SafeAreaView>
   );
 }
