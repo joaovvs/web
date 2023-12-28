@@ -1,3 +1,1 @@
-export type AcceptedPaymentsMode = {
-    type: 'ticket' | 'pix' | 'cash' | 'card' | 'deposit'
-}
+export type AcceptedPaymentsType = "ticket" | "pix" | "cash" | "card" | "deposit";

@@ -30,7 +30,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Carousel from "react-native-reanimated-carousel";
 
-export function Details() {
+export function Preview() {
   const [acceptedPaymentsType, setAcceptedPaymentsType] = useState<
     AcceptedPaymentsType []
   >([
@@ -282,7 +282,7 @@ export function Details() {
       </VStack>
       {/* Footer Menu */}
 
-      {!checkUserIsOwner() ? (
+
         <HStack
           bgColor={"gray.700"}
           px={7}
@@ -291,36 +291,10 @@ export function Details() {
           justifyContent={"space-between"}
           alignSelf={"baseline"}
         >
-          <Text
-            flex={1}
-            fontSize={"xl"}
-            color={"blue.500"}
-            fontFamily={"heading"}
-          >
-            <Text fontSize={"sm"}>R$</Text>120,00
-          </Text>
-          <Button title="Entrar em contato" type="contact" variant={"blue"} />
+          
+          <Button title="Voltar e editar" type="back" variant={"gray"} />
+          <Button title="Publicar" type="tag" variant={"blue"} />
         </HStack>
-      ) : (
-        <VStack h={140} bgColor={"gray.700"} px={7} py={5}>
-          {isActive ? (
-            <Button
-              title="Desativar anúncio"
-              variant={"black"}
-              type="power"
-              mb={2}
-            />
-          ) : (
-            <Button
-              title="Reativar anúncio"
-              variant={"blue"}
-              type="power"
-              mb={2}
-            />
-          )}
-          <Button title="Excluir anúncio" variant={"gray"} type="trash" />
-        </VStack>
-      )}
     </SafeAreaView>
   );
 }

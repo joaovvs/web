@@ -1,10 +1,12 @@
 import { HStack, Text } from "native-base";
 import { Barcode, QrCode, Bank, Money, CreditCard } from "phosphor-react-native";
-import { AcceptedPaymentsMode } from "src/@types/payments";
+import { AcceptedPaymentsType } from "src/@types/payments";
 
+type PaymentsProps = {
+    type: AcceptedPaymentsType
+}
 
-
-export function Payments({type}: AcceptedPaymentsMode){
+export function Payments( {type} : PaymentsProps){
 
 
     function switchIconByPaymentType(){
