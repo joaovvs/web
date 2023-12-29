@@ -11,7 +11,7 @@ import {
 } from "native-base";
 import { ArrowLeft, Plus, XCircle } from "phosphor-react-native";
 import { useState } from "react";
-import productImg from "@assets/product.png";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "@components/Input";
 
@@ -22,9 +22,10 @@ import { Toggle } from "@components/Toggle";
 import { Button } from "@components/Button";
 import { AcceptedPaymentsType } from "src/@types/payments";
 import { Checkbox } from "@components/Checkbox";
+
 import * as ImagePicker from "expo-image-picker";
 
-export function Create() {
+export function Edit() {
   const theme = useTheme();
   const [productType, setProductType] = useState<string>("");
   const [acceptTrade, setAcceptTrade] = useState(false);
@@ -35,11 +36,13 @@ export function Create() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
 
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({});
+
 
   function toggleSelectedPayments(type: AcceptedPaymentsType) {
     if (!!selectedPaymentsModes.find((mode) => mode === type)) {
@@ -48,7 +51,7 @@ export function Create() {
     } else {
       setSelectedPaymentsModes([...selectedPaymentsModes, type]);
     }
-  };
+  }
 
   async function handleAnnouncementPhotosSelect() {
     setPhotoIsLoading(true);
@@ -96,7 +99,7 @@ export function Create() {
               fontSize={"lg"}
               textAlign={"center"}
             >
-              Criar Anúncio
+              Editar Anúncio
             </Heading>
           </HStack>
         </VStack>
@@ -137,7 +140,7 @@ export function Create() {
                   top={1}
                   right={1}
                   p={0}
-                  onPress={()=> handleAnnouncementPhotosRemove(item)}
+                  onPress={() => handleAnnouncementPhotosRemove(item)}
                 >
                   <XCircle
                     color={theme.colors.gray[100]}
@@ -147,7 +150,7 @@ export function Create() {
                 </NativeButton>
               </Box>
             ))}
-            {announcementPhotos.length < 3 && (
+            {announcementPhotos.length < 4 && (
               <NativeButton size={100} bg={"gray.500"} rounded={"lg"} mr={2} onPress={handleAnnouncementPhotosSelect}>
                 <Plus />
               </NativeButton>

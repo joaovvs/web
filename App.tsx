@@ -13,6 +13,7 @@ import { Details } from '@screens/Details';
 import { Announcements } from '@screens/Announcements';
 import { Create } from '@screens/Create';
 import { Preview } from '@screens/Preview';
+import { Edit } from '@screens/Edit';
 
 export default function App() {
   const [fontsLoaded] = useFonts({Karla_700Bold, Karla_400Regular});
@@ -26,7 +27,7 @@ export default function App() {
           translucent
         />
           {!fontsLoaded ? <Loading/> :
-            <Preview/>}
+            <Create/>}
             </VStack>
       </NativeBaseProvider>
 

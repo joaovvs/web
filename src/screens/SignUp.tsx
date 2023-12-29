@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTheme } from "native-base";
+import { Box, useTheme } from "native-base";
 
 import LogoSvg from "@assets/logo.svg";
 import {
@@ -8,20 +8,28 @@ import {
   ScrollView,
   Heading,
   Text,
-  Pressable
+  Pressable,
+  Skeleton,
+  Button as NativeButton,
 } from "native-base";
 
-import { Eye, EyeSlash } from "phosphor-react-native";
+import avatar_emptyPng from "@assets/avatar_empty.png";
+import * as ImagePicker from "expo-image-picker";
+
+import { Eye, EyeSlash, PencilSimpleLine } from "phosphor-react-native";
 
 import { useForm, Controller } from "react-hook-form";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
-import { ProfileEditor } from "@components/ProfileEditor";
+
+import { ProfileImage } from "@components/ProfileImage";
 
 export function SignUp() {
-  const [show, setShow] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
+  const [userPhoto, setUserPhoto] = useState("");
 
   const {
     control,
@@ -33,6 +41,32 @@ export function SignUp() {
 
   function handleCreate() {
     console.log("create");
+  }
+
+  async function handleUserPhotoSelect() {
+    setPhotoIsLoading(true);
+
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+        allowsMultipleSelection: false,
+      });
+
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      if (photoSelected.assets[0].uri) {
+        setUserPhoto(photoSelected.assets[0].uri);
+      }
+    } catch (error) {
+      return error;
+    } finally {
+      setPhotoIsLoading(false);
+    }
   }
 
   return (
@@ -63,10 +97,29 @@ export function SignUp() {
       </VStack>
 
       <ScrollView showsVerticalScrollIndicator={false}>
+        <Box alignItems={"center"}>
+          {photoIsLoading ? (
+            <Skeleton w={24} h={24} rounded={"full"} bg={"gray.500"} />
+          ) : (
+            <ProfileImage
+              source={userPhoto ? { uri: userPhoto } : avatar_emptyPng}
+            />
+          )}
+          <NativeButton
+            p={4}
+            alignItems={"center"}
+            bgColor={"blue.300"}
+            rounded={"full"}
+            position={"absolute"}
+            bottom={0}
+            right={16}
+            onPress={handleUserPhotoSelect}
+          >
+            <PencilSimpleLine size={17} color={theme.colors.gray[600]} />
+          </NativeButton>
+        </Box>
 
-        <ProfileEditor />
         <VStack mt={4}>
-
           <Controller
             control={control}
             name="name"
@@ -121,13 +174,13 @@ export function SignUp() {
                 onChangeText={onChange}
                 value={value}
                 errorMessage={""}
-                type={show ? "text" : "password"}
+                type={showPassword ? "text" : "password"}
                 InputRightElement={
-                  <Pressable mr={4} onPress={() => setShow(!show)}>
-                    {show ? (
-                      <Eye color={theme.colors.gray[300]} />
-                    ) : (
+                  <Pressable mr={4} onPress={() => setShowPassword(!showPassword)}>
+                    {showPassword ? (
                       <EyeSlash color={theme.colors.gray[300]} />
+                      ) : (
+                        <Eye color={theme.colors.gray[300]} />
                     )}
                   </Pressable>
                 }
@@ -146,13 +199,13 @@ export function SignUp() {
                 onSubmitEditing={handleSubmit(handleCreate)}
                 returnKeyType="send"
                 errorMessage={errors.root?.message}
-                type={show ? "text" : "password"}
+                type={showPasswordConfirmation ? "text" : "password"}
                 InputRightElement={
-                  <Pressable mr={4} onPress={() => setShowConfirmation(!show)}>
-                    {showConfirmation ? (
-                      <Eye color={theme.colors.gray[300]} />
-                    ) : (
+                  <Pressable mr={4} onPress={() => setShowPasswordConfirmation(!showPasswordConfirmation)}>
+                    {showPasswordConfirmation ? (
                       <EyeSlash color={theme.colors.gray[300]} />
+                      ) : (
+                      <Eye color={theme.colors.gray[300]} />
                     )}
                   </Pressable>
                 }
