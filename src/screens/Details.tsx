@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ProfileImage } from "@components/ProfileImage";
 import { Tag } from "@components/Tag";
-import { Dimensions, View } from "react-native";
+import { Dimensions, SafeAreaView, View } from "react-native";
 import {
   HStack,
   Image,
@@ -26,7 +26,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+
 
 import Carousel from "react-native-reanimated-carousel";
 
@@ -130,7 +130,7 @@ export function Details() {
   }
 
   return (
-    <SafeAreaView>
+      <SafeAreaView style={{flex: 1, paddingTop: 24}}>
 
       {/* Header*/}
       <HStack px={6} alignItems={"center"} justifyContent={"space-between"}>
@@ -321,6 +321,7 @@ export function Details() {
           <Button title="Excluir anúncio" variant={"gray"} type="trash" />
         </VStack>
       )}
+
     </SafeAreaView>
   );
 }

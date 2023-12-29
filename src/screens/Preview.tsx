@@ -47,7 +47,6 @@ export function Preview() {
     productImg,
     productImg,
     productImg,
-    productImg,
   ]);
   const theme = useTheme();
 
@@ -125,26 +124,15 @@ export function Preview() {
     );
   };
 
-  function checkUserIsOwner() {
-    return false;
-  }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1, paddingTop: 24}}>
 
       {/* Header*/}
-      <HStack px={6} alignItems={"center"} justifyContent={"space-between"}>
-
-        <NativeButton alignItems={"center"} background={"transparent"}>
-          <ArrowLeft  color={theme.colors.gray[100]} size={24}/>
-        </NativeButton>
-
-        {checkUserIsOwner() && (
-          <NativeButton alignItems={"center"} background={"transparent"}>
-            <PencilSimpleLine color={theme.colors.gray[100]} size={24}/>
-          </NativeButton>
-        )}
-      </HStack>
+      <VStack px={6} alignItems={"center"} justifyContent={"space-between"} bgColor={"blue.300"}>
+        <Heading>Pré visualização do anúncio</Heading>
+        <Text>É assim que seu produto vai aparecer</Text>
+      </VStack>
 
       {/*Content  */}
       <VStack flex={1}>

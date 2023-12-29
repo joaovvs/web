@@ -10,6 +10,9 @@ import {
 } from "native-base";
 import { Plus } from "phosphor-react-native";
 import { useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+
 
 export function Announcements() {
   const [userAnnouncements, setUserAnnouncements] = useState([
@@ -24,10 +27,12 @@ export function Announcements() {
     { id: 9 },
   ]);
 
+  const [filter, setFilter] = useState("all");
+
   return (
-    <VStack flex={1}>
-      <HStack mt={5}>
-        <Heading flex={1} textAlign={"center"}>
+    <SafeAreaView style={{flex: 1, paddingTop: 24,  paddingLeft:24, paddingRight:24 }}>
+      <HStack pl={8} mb={8}>
+        <Heading flex={1} textAlign={"center"} mr={2}>
           Meus anúncios
         </Heading>
         <NativeButton bgColor="transparent">
@@ -35,13 +40,13 @@ export function Announcements() {
         </NativeButton>
       </HStack>
 
-      <VStack flex={1} px={6}>
-        <HStack justifyContent={"space-between"} mb={5}>
+      <VStack flex={1} >
+        <HStack justifyContent={"space-between"} >
           <Text>9 anúncios</Text>
-          <Select selectedValue="all">
-            <Select.Item label="Todos" value="all" />
-            <Select.Item label="Ativos" value="active" />
-            <Select.Item label="Inativos" value="inactive" />
+          <Select w={100} selectedValue={filter} borderColor={"gray.500"} onValueChange={(itemValue)=> setFilter(itemValue)}>
+            <Select.Item label="Todos" value ="all"/>
+            <Select.Item label="Ativos" value="active"/>
+            <Select.Item label="Inativos" value="inactive"/>
           </Select>
         </HStack>
 
@@ -53,9 +58,9 @@ export function Announcements() {
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{ gap: 10 }}
           flex={1}
-          mt={7}
+          mt={5}
         />
       </VStack>
-    </VStack>
+    </SafeAreaView>
   );
 }

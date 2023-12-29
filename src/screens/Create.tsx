@@ -8,15 +8,12 @@ import {
   Text,
   Box,
   Image,
-  Switch,
-  Icon,
 } from "native-base";
-import { ArrowLeft, Circle, Plus, XCircle } from "phosphor-react-native";
+import { ArrowLeft, Plus, XCircle } from "phosphor-react-native";
 import { useState } from "react";
 import productImg from "@assets/product.png";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "@components/Input";
-import { MaterialIcons } from "@expo/vector-icons";
 
 import { useForm, Controller } from "react-hook-form";
 import { TextArea } from "@components/TextArea";
@@ -51,7 +48,7 @@ export function Create() {
     }
   }
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1, paddingTop: 24}}>
       <ScrollView>
         <VStack px={5} mt={5} mb={7}>
           <HStack alignItems={"center"} justifyContent={"center"} pr={8}>
