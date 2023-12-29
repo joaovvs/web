@@ -9,6 +9,7 @@ import { House, SignOut, Tag } from "phosphor-react-native";
 import { useTheme } from "native-base";
 
 import { Platform } from 'react-native';
+import { AnnouncementObject } from "src/@types/announcement";
 
 
 
@@ -20,10 +21,10 @@ type AppRoutes = {
     };
     create: undefined;
     preview: {
-      id: string;
+      announcement: AnnouncementObject;
     };
     edit: {
-      id: string;
+      announcement: AnnouncementObject;
     };
     exit: undefined
 } 

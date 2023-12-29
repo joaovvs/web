@@ -24,6 +24,8 @@ import { Toggle } from "@components/Toggle";
 import { Button } from "@components/Button";
 import { AcceptedPaymentsType } from "src/@types/payments";
 import { Checkbox } from "@components/Checkbox";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { AnnouncementObject } from "src/@types/announcement";
 
 export function Create() {
   const theme = useTheme();
@@ -32,6 +34,8 @@ export function Create() {
   const [selectedPaymentsModes, setSelectedPaymentsModes] = useState<
     AcceptedPaymentsType[]
   >([]);
+
+  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject); 
 
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
@@ -42,10 +46,14 @@ export function Create() {
     formState: { errors },
   } = useForm({});
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   function handleBack(){
     navigation.goBack();
+  }
+
+  function handlePreview(){
+    navigation.navigate('preview', {announcement})
   }
 
   function toggleSelectedPayments(type: AcceptedPaymentsType) {
@@ -306,8 +314,8 @@ export function Create() {
           </VStack>
         </VStack>
           <HStack flex={1} px={5} background={"gray.700"} h={90} py={5}>
-            <Button title="Cancelar" variant={"gray"} mr={3}/>
-            <Button title="Avançar" variant={"black"} />
+            <Button title="Cancelar" variant={"gray"} mr={3} onPress={handleBack}/>
+            <Button title="Avançar" variant={"black"} onPress={handlePreview} />
           </HStack>
         
       </ScrollView>

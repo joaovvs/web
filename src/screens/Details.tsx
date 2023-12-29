@@ -31,6 +31,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import Carousel from "react-native-reanimated-carousel";
+import { AnnouncementObject } from "src/@types/announcement";
 
 
 type RouteParamsProps = {
@@ -47,6 +48,8 @@ export function Details() {
     "card",
     "deposit"
   ]);
+
+  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject);
 
   const route = useRoute();
 
@@ -147,7 +150,7 @@ export function Details() {
   }
 
   function handleEdit(){
-    navigation.navigate('edit', {id})
+    navigation.navigate('edit', {announcement})
   }
 
   return (

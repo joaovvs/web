@@ -26,6 +26,7 @@ import { Checkbox } from "@components/Checkbox";
 
 import * as ImagePicker from "expo-image-picker";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { AnnouncementObject } from "src/@types/announcement";
 
 
 type RouteParamsProps = {
@@ -42,6 +43,7 @@ export function Edit() {
 
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
+  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject);
 
   const route = useRoute();
 
@@ -55,12 +57,14 @@ export function Edit() {
     formState: { errors },
   } = useForm({});
 
-  function handleGoBack(){
-    navigation.goBack();
+
+
+  function handleShowDetail(){
+    navigation.navigate('details', {id});
   }
 
-  function handleForward(){
-    navigation.navigate("preview", {id})
+  function handlePreview(){
+    navigation.navigate("preview", {announcement})
   }
 
 
@@ -110,7 +114,7 @@ export function Edit() {
       <ScrollView>
         <VStack px={5} mb={7}>
           <HStack alignItems={"center"} justifyContent={"center"} pr={8}>
-            <Pressable bg={"transparent"} p={0} onPress={handleGoBack}>
+            <Pressable bg={"transparent"} p={0} onPress={handleShowDetail}>
               <ArrowLeft color={theme.colors.gray[100]} />
             </Pressable>
             <Heading
@@ -320,8 +324,8 @@ export function Edit() {
           </VStack>
         </VStack>
           <HStack flex={1} px={5} background={"gray.700"} h={90} py={5}>
-            <Button title="Cancelar" variant={"gray"} mr={3} onPress={handleGoBack}/>
-            <Button title="Avançar" variant={"black"} onPress={handleForward}/>
+            <Button title="Cancelar" variant={"gray"} mr={3} onPress={handleShowDetail}/>
+            <Button title="Avançar" variant={"black"} onPress={handlePreview}/>
           </HStack>
         
       </ScrollView>
