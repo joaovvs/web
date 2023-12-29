@@ -26,7 +26,7 @@ export default function App() {
           translucent
         />
           {!fontsLoaded ? <Loading/> :
-            <Announcements/>}
+            <Preview/>}
             </VStack>
       </NativeBaseProvider>
 

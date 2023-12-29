@@ -126,16 +126,16 @@ export function Preview() {
 
 
   return (
-    <SafeAreaView style={{flex: 1, paddingTop: 24}}>
+    <SafeAreaView style={{flex: 1, paddingTop: 24, backgroundColor: theme.colors.blue[300]}}>
 
       {/* Header*/}
-      <VStack px={6} alignItems={"center"} justifyContent={"space-between"} bgColor={"blue.300"}>
-        <Heading>Pré visualização do anúncio</Heading>
-        <Text>É assim que seu produto vai aparecer</Text>
+      <VStack px={6} alignItems={"center"} justifyContent={"space-between"} bgColor={"blue.300"} mb={4}>
+        <Heading fontFamily={"heading"} fontSize={"md"} color={"gray.700"}>Pré visualização do anúncio</Heading>
+        <Text fontFamily={"body"} fontSize={"sm"} color={"gray.700"}>É assim que seu produto vai aparecer</Text>
       </VStack>
 
       {/*Content  */}
-      <VStack flex={1}>
+      <VStack flex={1} bgColor={"gray.600"}>
         {/*Image Carousel*/}
         <Box
           position={"relative"}
@@ -281,7 +281,7 @@ export function Preview() {
         >
           
           <Button title="Voltar e editar" type="back" variant={"gray"} />
-          <Button title="Publicar" type="tag" variant={"blue"} />
+          <Button title="Publicar" type="tag" variant={"blue"} ml={3}/>
         </HStack>
     </SafeAreaView>
   );
