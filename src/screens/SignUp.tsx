@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Box, useTheme } from "native-base";
+import { useNavigation } from "@react-navigation/native";
 
 import LogoSvg from "@assets/logo.svg";
 import {
@@ -22,6 +23,7 @@ import { useForm, Controller } from "react-hook-form";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { AuthNavigatorRoutesProps} from '@routes/auth.routes'
 
 import { ProfileImage } from "@components/ProfileImage";
 
@@ -31,6 +33,7 @@ export function SignUp() {
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
   const [userPhoto, setUserPhoto] = useState("");
 
+
   const {
     control,
     handleSubmit,
@@ -38,6 +41,12 @@ export function SignUp() {
   } = useForm({});
 
   const theme = useTheme();
+
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  function handleSignInNavigation(){
+    navigation.navigate('signIn');
+  }
 
   function handleCreate() {
     console.log("create");
@@ -70,7 +79,7 @@ export function SignUp() {
   }
 
   return (
-    <VStack flex={1} px={12} pt={16} bg={"gray.600"}>
+    <VStack flex={1} px={12} pt={12} bg={"gray.600"}>
       <VStack mb={8}>
         <Center>
           <LogoSvg height={40} />
@@ -216,14 +225,14 @@ export function SignUp() {
           <Button title="Criar" variant={"black"} />
         </VStack>
 
-        <VStack mt={12} mb={16}>
+        <VStack mt={8} mb={16}>
           <Center>
             <Heading fontFamily={"body"} fontSize={"sm"} mb={4}>
               Já tem uma conta?
             </Heading>
           </Center>
 
-          <Button title="Ir para o login" variant={"gray"} />
+          <Button title="Ir para o login" variant={"gray"} onPress={handleSignInNavigation}/>
         </VStack>
       </ScrollView>
     </VStack>

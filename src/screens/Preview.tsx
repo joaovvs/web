@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ProfileImage } from "@components/ProfileImage";
 import { Tag } from "@components/Tag";
 import { Dimensions, View } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
   HStack,
   Image,
@@ -10,12 +11,10 @@ import {
   Text,
   useTheme,
   Heading,
-  Button as NativeButton,
   Box,
 } from "native-base";
 import productImg from "@assets/product.png";
 
-import { ArrowLeft, PencilSimpleLine } from "phosphor-react-native";
 import { Payments } from "@components/Payments";
 import { AcceptedPaymentsType } from "src/@types/payments";
 import { Button } from "@components/Button";
@@ -29,6 +28,12 @@ import Animated, {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Carousel from "react-native-reanimated-carousel";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+
+
+type RouteParamsProps = {
+  id: string;
+};
 
 export function Preview() {
   const [acceptedPaymentsType, setAcceptedPaymentsType] = useState<
@@ -49,6 +54,11 @@ export function Preview() {
     productImg,
   ]);
   const theme = useTheme();
+
+  const navigation = useNavigation<AppNavigatorRoutesProps>()
+  const route = useRoute();
+
+  const { id } = route.params as RouteParamsProps;
 
   const progressValue = useSharedValue<number>(0);
   const width = Dimensions.get("window").width;
@@ -124,6 +134,9 @@ export function Preview() {
     );
   };
 
+  function handleEdit(){
+    navigation.navigate('edit', {id});
+  }
 
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 24, backgroundColor: theme.colors.blue[300]}}>
@@ -280,7 +293,7 @@ export function Preview() {
           alignSelf={"baseline"}
         >
           
-          <Button title="Voltar e editar" type="back" variant={"gray"} />
+          <Button title="Voltar e editar" type="back" variant={"gray"} onPress={handleEdit}/>
           <Button title="Publicar" type="tag" variant={"blue"} ml={3}/>
         </HStack>
     </SafeAreaView>

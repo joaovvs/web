@@ -10,7 +10,7 @@ import {
   Text,
   useTheme,
   Heading,
-  Button as NativeButton,
+  Pressable,
   Box,
 } from "native-base";
 import productImg from "@assets/product.png";
@@ -27,8 +27,15 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import Carousel from "react-native-reanimated-carousel";
+
+
+type RouteParamsProps = {
+  id: string;
+};
 
 export function Details() {
   const [acceptedPaymentsType, setAcceptedPaymentsType] = useState<
@@ -40,6 +47,12 @@ export function Details() {
     "card",
     "deposit"
   ]);
+
+  const route = useRoute();
+
+  const { id } = route.params as RouteParamsProps;
+
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const isActive = true;
 
@@ -126,23 +139,31 @@ export function Details() {
   };
 
   function checkUserIsOwner() {
-    return false;
+    return true;
+  }
+
+  function handleGoBack(){
+    navigation.goBack();
+  }
+
+  function handleEdit(){
+    navigation.navigate('edit', {id})
   }
 
   return (
       <SafeAreaView style={{flex: 1, paddingTop: 24}}>
 
       {/* Header*/}
-      <HStack px={6} alignItems={"center"} justifyContent={"space-between"}>
+      <HStack px={5} pt={5} mb={3} justifyContent={"space-between"}>
 
-        <NativeButton alignItems={"center"} background={"transparent"}>
+        <Pressable alignItems={"center"} background={"transparent"} p={0} onPress={handleGoBack}>
           <ArrowLeft  color={theme.colors.gray[100]} size={24}/>
-        </NativeButton>
+        </Pressable>
 
         {checkUserIsOwner() && (
-          <NativeButton alignItems={"center"} background={"transparent"}>
-            <PencilSimpleLine color={theme.colors.gray[100]} size={24}/>
-          </NativeButton>
+          <Pressable alignItems={"center"} background={"transparent"} p={0} onPress={handleEdit}>
+            <PencilSimpleLine color={theme.colors.gray[100]} size={24} />
+          </Pressable>
         )}
       </HStack>
 
@@ -209,7 +230,7 @@ export function Details() {
           })}
         </HStack>
 
-        <ScrollView px={7}>
+        <ScrollView px={5}>
           {/* Authors */}
           <HStack alignItems={"center"} mt={5} mb={7}>
             <ProfileImage

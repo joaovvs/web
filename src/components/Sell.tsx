@@ -8,8 +8,18 @@ import {
 import { TouchableOpacity } from "react-native";
 import { ArrowRight, Tag } from "phosphor-react-native";
 
+import { useNavigation } from '@react-navigation/native'
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+
 export function Sell() {
+
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
+
   const theme = useTheme();
+
+  function handleAnnouncements(){
+    navigation.navigate('announcements');
+  }
   return (
     <VStack mb={8}>
       <Text fontSize={"sm"} 
@@ -40,7 +50,7 @@ export function Sell() {
             </Text>
           </VStack>
         </HStack>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleAnnouncements}>
           <HStack>
             <Text
               color={"blue.500"}

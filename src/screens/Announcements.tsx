@@ -1,6 +1,9 @@
-import { Card } from "@components/Card";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+
+
 import {
-  Button as NativeButton,
+  Pressable,
   HStack,
   Heading,
   VStack,
@@ -9,25 +12,32 @@ import {
   FlatList,
 } from "native-base";
 import { Plus } from "phosphor-react-native";
-import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Card } from "@components/Card";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 
 export function Announcements() {
   const [userAnnouncements, setUserAnnouncements] = useState([
-    { id: 1 },
-    { id: 2 },
-    { id: 3 },
-    { id: 4 },
-    { id: 5 },
-    { id: 6 },
-    { id: 7 },
-    { id: 8 },
-    { id: 9 },
+    { id: '1' },
+    { id: '2' },
+    { id: '3' },
+    { id: '4' },
+    { id: '5' },
+    { id: '6' },
+    { id: '7' },
+    { id: '8' },
+    { id: '9' },
   ]);
 
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
+
   const [filter, setFilter] = useState("all");
+
+  function handleCreate(){
+    navigation.navigate('create');
+  }
 
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 24,  paddingLeft:24, paddingRight:24 }}>
@@ -35,9 +45,9 @@ export function Announcements() {
         <Heading flex={1} textAlign={"center"} mr={2}>
           Meus anúncios
         </Heading>
-        <NativeButton bgColor="transparent">
+        <Pressable onPress={handleCreate}>
           <Plus />
-        </NativeButton>
+        </Pressable>
       </HStack>
 
       <VStack flex={1} >
@@ -52,9 +62,9 @@ export function Announcements() {
 
         <FlatList
           data={userAnnouncements}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           numColumns={2}
-          renderItem={(item) => <Card showAvatarImg={false}/>}
+          renderItem={(item) => <Card announcement={item} showAvatarImg={false}/>}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{ gap: 10 }}
           flex={1}

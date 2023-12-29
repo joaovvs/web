@@ -1,5 +1,7 @@
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
-  Button as NativeButton,
+  Pressable,
   HStack,
   ScrollView,
   VStack,
@@ -10,19 +12,18 @@ import {
   Image,
 } from "native-base";
 import { ArrowLeft, Plus, XCircle } from "phosphor-react-native";
-import { useState } from "react";
-import productImg from "@assets/product.png";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "@components/Input";
-
 import { useForm, Controller } from "react-hook-form";
+
+import * as ImagePicker from "expo-image-picker";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+import { Input } from "@components/Input";
 import { TextArea } from "@components/TextArea";
 import { RadioButton } from "@components/RadioButton";
 import { Toggle } from "@components/Toggle";
 import { Button } from "@components/Button";
 import { AcceptedPaymentsType } from "src/@types/payments";
 import { Checkbox } from "@components/Checkbox";
-import * as ImagePicker from "expo-image-picker";
 
 export function Create() {
   const theme = useTheme();
@@ -40,6 +41,12 @@ export function Create() {
     handleSubmit,
     formState: { errors },
   } = useForm({});
+
+  const navigation = useNavigation();
+
+  function handleBack(){
+    navigation.goBack();
+  }
 
   function toggleSelectedPayments(type: AcceptedPaymentsType) {
     if (!!selectedPaymentsModes.find((mode) => mode === type)) {
@@ -86,9 +93,9 @@ export function Create() {
       <ScrollView>
         <VStack px={5} mb={7}>
           <HStack alignItems={"center"} justifyContent={"center"} pr={8}>
-            <NativeButton bg={"transparent"} p={0}>
+            <Pressable bg={"transparent"} p={0} onPress={handleBack}>
               <ArrowLeft color={theme.colors.gray[100]} />
-            </NativeButton>
+            </Pressable>
             <Heading
               flex={1}
               color={"gray.100"}
@@ -131,7 +138,7 @@ export function Create() {
                   size={100}
                   resizeMode="cover"
                 />
-                <NativeButton
+                <Pressable
                   position={"absolute"}
                   bg={"transparent"}
                   top={1}
@@ -144,13 +151,22 @@ export function Create() {
                     weight="fill"
                     size={16}
                   />
-                </NativeButton>
+                </Pressable>
               </Box>
             ))}
             {announcementPhotos.length < 3 && (
-              <NativeButton size={100} bg={"gray.500"} rounded={"lg"} mr={2} onPress={handleAnnouncementPhotosSelect}>
+              <Pressable
+              alignItems={"center"}
+              justifyContent={"center"}
+              size={100} 
+              bg={"gray.500"} 
+              rounded={"lg"} 
+              mr={2} 
+              onPress={handleAnnouncementPhotosSelect}
+              
+              >
                 <Plus />
-              </NativeButton>
+              </Pressable>
             )}
           </HStack>
         

@@ -2,11 +2,13 @@ import { Card } from "@components/Card";
 import { HomeHeader } from "@components/HomeHeader";
 import { Search } from "@components/Search";
 import { Sell } from "@components/Sell";
-import { VStack, Text, View, FlatList } from "native-base";
+import { VStack, FlatList } from "native-base";
 import { useState } from "react";
 
+
+
 export function Home(){
-    const [products, setProducts] = useState([{id: 1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7},{id:8},{id:9}])
+    const [products, setProducts] = useState([{id: '1'},{id:'2'},{id:'3'},{id:'4'},{id:'5'},{id:'6'},{id:'7'},{id:'8'},{id:'9'}])
     return(
         <VStack flex={1} mt={6}  p={6} bg={"gray.600"}>
             <HomeHeader/>
@@ -15,10 +17,10 @@ export function Home(){
 
                 <FlatList
                     data={products}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item.id}
                     numColumns={2}
                     renderItem={(item)=> (
-                        <Card/>
+                        <Card announcement={ item } />
                     )}
                     showsVerticalScrollIndicator={false}
                     columnWrapperStyle={{gap: 10}}

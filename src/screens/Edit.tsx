@@ -1,5 +1,7 @@
+import { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import {
-  Button as NativeButton,
+  Pressable,
   HStack,
   ScrollView,
   VStack,
@@ -10,7 +12,6 @@ import {
   Image,
 } from "native-base";
 import { ArrowLeft, Plus, XCircle } from "phosphor-react-native";
-import { useState } from "react";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "@components/Input";
@@ -24,6 +25,12 @@ import { AcceptedPaymentsType } from "src/@types/payments";
 import { Checkbox } from "@components/Checkbox";
 
 import * as ImagePicker from "expo-image-picker";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+
+
+type RouteParamsProps = {
+  id: string;
+};
 
 export function Edit() {
   const theme = useTheme();
@@ -36,12 +43,25 @@ export function Edit() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
 
+  const route = useRoute();
+
+  const { id } = route.params as RouteParamsProps;
+
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({});
+
+  function handleGoBack(){
+    navigation.goBack();
+  }
+
+  function handleForward(){
+    navigation.navigate("preview", {id})
+  }
 
 
   function toggleSelectedPayments(type: AcceptedPaymentsType) {
@@ -84,14 +104,15 @@ export function Edit() {
 
   }
 
+
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 24}}>
       <ScrollView>
         <VStack px={5} mb={7}>
           <HStack alignItems={"center"} justifyContent={"center"} pr={8}>
-            <NativeButton bg={"transparent"} p={0}>
+            <Pressable bg={"transparent"} p={0} onPress={handleGoBack}>
               <ArrowLeft color={theme.colors.gray[100]} />
-            </NativeButton>
+            </Pressable>
             <Heading
               flex={1}
               color={"gray.100"}
@@ -134,7 +155,7 @@ export function Edit() {
                   size={100}
                   resizeMode="cover"
                 />
-                <NativeButton
+                <Pressable
                   position={"absolute"}
                   bg={"transparent"}
                   top={1}
@@ -147,13 +168,19 @@ export function Edit() {
                     weight="fill"
                     size={16}
                   />
-                </NativeButton>
+                </Pressable>
               </Box>
             ))}
-            {announcementPhotos.length < 4 && (
-              <NativeButton size={100} bg={"gray.500"} rounded={"lg"} mr={2} onPress={handleAnnouncementPhotosSelect}>
+            {announcementPhotos.length < 3 && (
+              <Pressable 
+              alignItems={"center"}
+              justifyContent={"center"}
+              size={100} bg={"gray.500"} 
+              rounded={"lg"} 
+              mr={2} 
+              onPress={handleAnnouncementPhotosSelect}>
                 <Plus />
-              </NativeButton>
+              </Pressable>
             )}
           </HStack>
         
@@ -293,8 +320,8 @@ export function Edit() {
           </VStack>
         </VStack>
           <HStack flex={1} px={5} background={"gray.700"} h={90} py={5}>
-            <Button title="Cancelar" variant={"gray"} mr={3}/>
-            <Button title="Avançar" variant={"black"} />
+            <Button title="Cancelar" variant={"gray"} mr={3} onPress={handleGoBack}/>
+            <Button title="Avançar" variant={"black"} onPress={handleForward}/>
           </HStack>
         
       </ScrollView>

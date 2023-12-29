@@ -6,7 +6,7 @@ import { useFonts, Karla_700Bold, Karla_400Regular } from '@expo-google-fonts/ka
 import { THEME } from './src/theme';
 import { Loading } from '@components/Loading';
 
-import { SignIn } from '@screens/SignIn';
+import { Routes } from './src/routes';
 import { SignUp } from '@screens/SignUp';
 import { Home } from '@screens/Home';
 import { Details } from '@screens/Details';
@@ -26,8 +26,7 @@ export default function App() {
           style='dark'
           translucent
         />
-          {!fontsLoaded ? <Loading/> :
-            <Create/>}
+          {fontsLoaded ? <Routes/> : <Loading/>}
             </VStack>
       </NativeBaseProvider>
 

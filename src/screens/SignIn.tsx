@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useTheme } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { useForm, Controller } from "react-hook-form";
+
 import LogoSvg from "@assets/logo.svg";
 import MarketplaceSVg from "@assets/marketspace.svg";
+import { Eye, EyeSlash } from "phosphor-react-native";
 
 import {
   ScrollView,
@@ -12,9 +16,9 @@ import {
   Pressable,
   Icon,
 } from "native-base";
-import { useForm, Controller } from "react-hook-form";
 
-import { Eye, EyeSlash } from "phosphor-react-native";
+import { AuthNavigatorRoutesProps} from '@routes/auth.routes'
+
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
@@ -24,6 +28,8 @@ export function SignIn() {
 
   const theme = useTheme();
 
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
   const {
     control,
     handleSubmit,
@@ -32,6 +38,10 @@ export function SignIn() {
 
   function handleSignIn() {
     console.log("signIn");
+  }
+
+  function handleCreate(){
+    navigation.navigate("signUp");
   }
 
   return (
@@ -113,7 +123,7 @@ export function SignIn() {
           </Heading>
         </Center>
 
-        <Button title="Crie uma conta" variant={"gray"} />
+        <Button title="Crie uma conta" variant={"gray"} onPress={handleCreate}/>
       </VStack>
     </ScrollView>
   );
