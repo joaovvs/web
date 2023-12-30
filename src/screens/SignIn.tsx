@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTheme } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import LogoSvg from "@assets/logo.svg";
 import MarketplaceSVg from "@assets/marketspace.svg";
@@ -14,7 +16,7 @@ import {
   Text,
   Heading,
   Pressable,
-  Icon,
+  useToast
 } from "native-base";
 
 import { AuthNavigatorRoutesProps} from '@routes/auth.routes'
@@ -23,21 +25,59 @@ import { AuthNavigatorRoutesProps} from '@routes/auth.routes'
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
 
-export function SignIn() {
-  const [show, setShow] = useState(false);
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
 
+
+type FormDataProps = {
+  email: string;
+  password: string;
+};
+
+const signInSchema = yup.object({
+  email: yup.string().required("Informe o e-mail.").email("E-mail inválido."),
+  password: yup
+    .string()
+    .required("Informe uma senha.")
+    .min(6, "A senha deve possuir pelo menos 6 dígitos."),
+});
+
+export function SignIn() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const { signIn } = useAuth();
   const theme = useTheme();
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const toast = useToast();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({});
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signInSchema),
+  });
 
-  function handleSignIn() {
-    console.log("signIn");
+  async function handleSignIn({ email, password }: FormDataProps) {
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível autenticar, tente novamente mais tarde.";
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   function handleCreate(){
@@ -45,7 +85,7 @@ export function SignIn() {
   }
 
   return (
-    <ScrollView flex={1} bg={"gray.600"} py={16} px={12}>
+    <ScrollView flexGrow={1} bg={"gray.600"} py={16} px={12}>
       <VStack mb={20}>
         <Center>
           <LogoSvg/>
@@ -84,7 +124,7 @@ export function SignIn() {
               autoCapitalize="none"
               onChangeText={onChange}
               value={value}
-              errorMessage={errors.root?.message}
+              errorMessage={errors.email?.message}
             />
           )}
         />
@@ -99,7 +139,7 @@ export function SignIn() {
               value={value}
               onSubmitEditing={handleSubmit(handleSignIn)}
               returnKeyType="send"
-              errorMessage={errors.root?.message}
+              errorMessage={errors.password?.message}
               type={show ? "text" : "password"}
               InputRightElement={
                 <Pressable mr={4} onPress={() => setShow(!show)}>
@@ -113,7 +153,7 @@ export function SignIn() {
             />
           )}
         />
-        <Button title="Entrar" variant={"blue"} />
+        <Button title="Entrar" variant={"blue"} onPress={handleSubmit(handleSignIn)} isLoading={isLoading}/>
       </VStack>
 
       <VStack flex={1} marginTop={12}>

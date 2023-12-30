@@ -40,9 +40,6 @@ export function AppRoutes() {
 
   const iconSize = theme.sizes[6];
 
-  function HandleSignOut(){
-    console.log('handlesignout');
-  }
 
   return (
     <Navigator screenOptions={{
