@@ -12,7 +12,7 @@ export function Payments( {type} : PaymentsProps){
     function switchIconByPaymentType(){
         const iconSize = 18
         switch (type){
-            case "ticket":
+            case "boleto":
                 return <Barcode size={iconSize}/>
             case "pix":
                 return <QrCode size={iconSize}/>
@@ -27,7 +27,7 @@ export function Payments( {type} : PaymentsProps){
 
     function switchTextByPaymentType(){
         switch (type){
-            case "ticket":
+            case "boleto":
                 return "Boleto"
             case "pix":
                 return "Pix"

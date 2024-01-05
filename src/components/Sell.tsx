@@ -1,25 +1,49 @@
+import { useEffect, useState } from "react";
 import {
   VStack,
   Text,
   HStack,
   Heading,
   useTheme,
+  Toast,
 } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { ArrowRight, Tag } from "phosphor-react-native";
 
+import { ProductDTO } from "@dtos/ProductDTO";
+
 import { useNavigation } from '@react-navigation/native'
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { api } from "@services/api";
 
 export function Sell() {
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
+  const [productsCounter, setProductsCounter] = useState(0);
   const theme = useTheme();
 
   function handleAnnouncements(){
     navigation.navigate('announcements');
   }
+
+  async function fetchUserProducts(){
+    try {
+      const response = await api.get('users/products');
+      const products = response.data as ProductDTO[];
+      if(products){
+        setProductsCounter(products.length);
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    fetchUserProducts();
+  },[]);
+
   return (
     <VStack mb={8}>
       <Text fontSize={"sm"} 
@@ -43,7 +67,7 @@ export function Sell() {
 
           <VStack ml={4}>
             <Heading fontSize={"lg"} color={"gray.200"} fontFamily={"heading"}>
-              4
+              {productsCounter}
             </Heading>
             <Text fontSize={"xs"} color={"gray.200"} fontFamily={"body"}>
               anúncios ativos

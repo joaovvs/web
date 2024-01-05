@@ -29,11 +29,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Carousel from "react-native-reanimated-carousel";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { AnnouncementObject } from "src/@types/announcement";
 
 
 type RouteParamsProps = {
-  announcement: AnnouncementObject;
+  id: string;
 };
 
 export function Preview() {
@@ -59,7 +58,7 @@ export function Preview() {
   const navigation = useNavigation<AppNavigatorRoutesProps>()
   const route = useRoute();
 
-  const { announcement } = route.params as RouteParamsProps;
+  const { id } = route.params as RouteParamsProps;
 
   const progressValue = useSharedValue<number>(0);
   const width = Dimensions.get("window").width;
@@ -136,7 +135,7 @@ export function Preview() {
   };
 
   function handleEdit(){
-      navigation.navigate('edit', {announcement});
+      navigation.navigate('edit', {id});
 
   }
 

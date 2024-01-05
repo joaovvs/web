@@ -12,58 +12,107 @@ import {
   Image,
 } from "native-base";
 import { ArrowLeft, Plus, XCircle } from "phosphor-react-native";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, DefaultValues } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 import * as ImagePicker from "expo-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { api } from "@services/api";
+import { ProductDTO } from "@dtos/ProductDTO";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+
 import { Input } from "@components/Input";
 import { TextArea } from "@components/TextArea";
-import { RadioButton } from "@components/RadioButton";
-import { Toggle } from "@components/Toggle";
 import { Button } from "@components/Button";
 import { AcceptedPaymentsType } from "src/@types/payments";
-import { Checkbox } from "@components/Checkbox";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { AnnouncementObject } from "src/@types/announcement";
+import { PaymentsSelector } from "@components/PaymentsSelector";
+import { Switch } from "@components/Switch";
+import { Radio } from "@components/Radio";
+
+type FormDataProps = {
+  name: string;
+  description: string;
+  is_new: string;
+  price: number;
+  accept_trade: boolean;
+  payment_methods: AcceptedPaymentsType[];
+};
+
+export const defaultValues: DefaultValues<FormDataProps> = {
+  name: "",
+  description: "",
+  is_new: "false",
+  price: 0,
+  accept_trade: false,
+  payment_methods: [],
+};
+
+const signInSchema = yup.object({
+  name: yup
+    .string()
+    .required("Informe o nome do produto.")
+    .min(3, "O nome deve possuir ao menos 3 caracteres"),
+  description: yup.string().required("Informe a descrição do produto."),
+  price: yup.number().required("Informe o valor do produto."),
+  is_new: yup.string().required("Informe se o produto é novo ou usado."),
+  accept_trade: yup.boolean().required("Informe se aceita troca."),
+  payment_methods: yup
+    .array()
+    .required("Informe ao menos uma forma de pagamento"),
+});
 
 export function Create() {
   const theme = useTheme();
-  const [productType, setProductType] = useState<string>("");
-  const [acceptTrade, setAcceptTrade] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedPaymentsModes, setSelectedPaymentsModes] = useState<
     AcceptedPaymentsType[]
   >([]);
-
-  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject); 
-
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
+  const [productPhotos, setProductPhotos] = useState<string[]>([]);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({});
+  } = useForm<FormDataProps>({
+    resolver: yupResolver(signInSchema),
+    defaultValues,
+  });
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  function handleBack(){
+  function handleBack() {
     navigation.goBack();
   }
 
-  function handlePreview(){
-    navigation.navigate('preview', {announcement})
-  }
+  async function handleCreateProduct({
+    name,
+    description,
+    price,
+    accept_trade,
+    is_new,
+    payment_methods,
+  }: FormDataProps) {
+    try {
+      setIsSubmitting(true);
 
-  function toggleSelectedPayments(type: AcceptedPaymentsType) {
-    if (!!selectedPaymentsModes.find((mode) => mode === type)) {
-      const filtered = selectedPaymentsModes.filter((mode) => mode! != type);
-      setSelectedPaymentsModes(filtered);
-    } else {
-      setSelectedPaymentsModes([...selectedPaymentsModes, type]);
+      console.log({
+        name,
+        description,
+        price,
+        is_new,
+        accept_trade,
+        payment_methods,
+      });
+      /* navigation.navigate('preview', {id: product.id})*/
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }
 
   async function handleAnnouncementPhotosSelect() {
     setPhotoIsLoading(true);
@@ -74,15 +123,18 @@ export function Create() {
         quality: 1,
         aspect: [4, 4],
         allowsMultipleSelection: true,
-        selectionLimit: 3 - announcementPhotos.length
+        selectionLimit: 3 - productPhotos.length,
       });
 
       if (photosSelected.canceled) {
         return;
       }
 
-      if (photosSelected.assets.length>0) {
-        setAnnouncementPhotos([...announcementPhotos,...photosSelected.assets.map(photo => photo.uri)]);
+      if (photosSelected.assets.length > 0) {
+        setProductPhotos([
+          ...productPhotos,
+          ...photosSelected.assets.map((photo) => photo.uri),
+        ]);
       }
     } catch (error) {
       return error;
@@ -91,13 +143,18 @@ export function Create() {
     }
   }
 
-  function handleAnnouncementPhotosRemove(removed: string){
-    setAnnouncementPhotos(announcementPhotos.filter(photo=> photo !==removed));
-
+  function handleProductPhotosRemove(removed: string) {
+    setProductPhotos(productPhotos.filter((photo) => photo !== removed));
   }
 
   return (
-    <SafeAreaView style={{flex: 1, paddingTop: 24}}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        paddingTop: 24,
+        backgroundColor: theme.colors.gray[600],
+      }}
+    >
       <ScrollView>
         <VStack px={5} mb={7}>
           <HStack alignItems={"center"} justifyContent={"center"} pr={8}>
@@ -131,7 +188,7 @@ export function Create() {
           </Text>
 
           <HStack mb={8}>
-            {announcementPhotos.map((item, index) => (
+            {productPhotos.map((item, index) => (
               <Box
                 key={index}
                 size={100}
@@ -141,7 +198,7 @@ export function Create() {
                 position={"relative"}
               >
                 <Image
-                  source={{uri: item}}
+                  source={{ uri: item }}
                   alt="Imagem carregada"
                   size={100}
                   resizeMode="cover"
@@ -152,7 +209,7 @@ export function Create() {
                   top={1}
                   right={1}
                   p={0}
-                  onPress={()=> handleAnnouncementPhotosRemove(item)}
+                  onPress={() => handleProductPhotosRemove(item)}
                 >
                   <XCircle
                     color={theme.colors.gray[100]}
@@ -162,22 +219,21 @@ export function Create() {
                 </Pressable>
               </Box>
             ))}
-            {announcementPhotos.length < 3 && (
+            {productPhotos.length < 3 && (
               <Pressable
-              alignItems={"center"}
-              justifyContent={"center"}
-              size={100} 
-              bg={"gray.500"} 
-              rounded={"lg"} 
-              mr={2} 
-              onPress={handleAnnouncementPhotosSelect}
-              
+                alignItems={"center"}
+                justifyContent={"center"}
+                size={100}
+                bg={"gray.500"}
+                rounded={"lg"}
+                mr={2}
+                onPress={handleAnnouncementPhotosSelect}
               >
                 <Plus />
               </Pressable>
             )}
           </HStack>
-        
+
           <Heading
             fontFamily={"heading"}
             fontSize={"md"}
@@ -189,14 +245,14 @@ export function Create() {
 
           <Controller
             control={control}
-            name="title"
+            name="name"
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Título do Produto"
                 keyboardType="default"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.root?.message}
+                errorMessage={errors.name?.message}
               />
             )}
           />
@@ -211,24 +267,23 @@ export function Create() {
                 keyboardType="default"
                 onChangeText={onChange}
                 value={value}
-                errorMessage={errors.root?.message}
+                errorMessage={errors.description?.message}
               />
             )}
           />
 
-          <HStack mb={8}>
-            <RadioButton
-              title="Produto novo"
-              isChecked={productType === "new"}
-              onPress={() => setProductType("new")}
-            />
-
-            <RadioButton
-              title="Produto usado"
-              isChecked={productType === "used"}
-              onPress={() => setProductType("used")}
-            />
-          </HStack>
+          <Controller
+            name="is_new"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <Radio
+                name="isNewRadio"
+                onChange={onChange}
+                value={String(value)}
+                errorMessage={errors.is_new?.message}
+              />
+            )}
+          />
 
           <Heading
             fontFamily={"heading"}
@@ -241,14 +296,14 @@ export function Create() {
 
           <Controller
             control={control}
-            name="value"
+            name="price"
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Valor do Produto"
-                keyboardType="default"
+                keyboardType="numeric"
                 onChangeText={onChange}
-                value={value}
-                errorMessage={errors.root?.message}
+                value={String(value)}
+                errorMessage={errors.price?.message}
               />
             )}
           />
@@ -262,9 +317,15 @@ export function Create() {
             Aceita troca?
           </Heading>
 
-          <Toggle
-            onPress={() => setAcceptTrade(!acceptTrade)}
-            isPressed={acceptTrade}
+          <Controller
+            name="accept_trade"
+            control={control}
+            render={({ field}) => (
+              <Switch
+              errorMessage={errors.accept_trade?.message}
+              {...field}
+              />
+            )}
           />
 
           <Heading
@@ -277,48 +338,35 @@ export function Create() {
           </Heading>
 
           <VStack mb={26}>
-            <Checkbox
-              title="Boleto"
-              isChecked={
-                !!selectedPaymentsModes.find((mode) => mode === "ticket")
-              }
-              onPress={() => toggleSelectedPayments("ticket")}
-            />
-
-            <Checkbox
-              title="Pix"
-              isChecked={!!selectedPaymentsModes.find((mode) => mode === "pix")}
-              onPress={() => toggleSelectedPayments("pix")}
-            />
-            <Checkbox
-              title="Dinheiro"
-              isChecked={
-                !!selectedPaymentsModes.find((mode) => mode === "cash")
-              }
-              onPress={() => toggleSelectedPayments("cash")}
-            />
-            <Checkbox
-              title="Cartão de Crédito"
-              isChecked={
-                !!selectedPaymentsModes.find((mode) => mode === "card")
-              }
-              onPress={() => toggleSelectedPayments("card")}
-            />
-            <Checkbox
-              title="Depósito"
-              isChecked={
-                !!selectedPaymentsModes.find((mode) => mode === "deposit")
-              }
-              onPress={() => toggleSelectedPayments("deposit")}
+            <Controller
+              name="payment_methods"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <PaymentsSelector
+                  value={value}
+                  onChange={()=> console.log(value)}
+                  errorMessage={errors.payment_methods?.message}
+                />
+              )}
             />
           </VStack>
         </VStack>
-          <HStack flex={1} px={5} background={"gray.700"} h={90} py={5}>
-            <Button title="Cancelar" variant={"gray"} mr={3} onPress={handleBack}/>
-            <Button title="Avançar" variant={"black"} onPress={handlePreview} />
-          </HStack>
-        
+
+        <HStack flex={1} px={5} background={"gray.700"} h={90} py={5}>
+          <Button
+            title="Cancelar"
+            variant={"gray"}
+            mr={3}
+            onPress={handleBack}
+          />
+          <Button
+            title="Avançar"
+            variant={"black"}
+            onPress={handleSubmit(handleCreateProduct)}
+            isLoading={isSubmitting}
+          />
+        </HStack>
       </ScrollView>
     </SafeAreaView>
   );
-}
+};

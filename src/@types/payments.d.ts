@@ -1,1 +1,1 @@
-export type AcceptedPaymentsType = "ticket" | "pix" | "cash" | "card" | "deposit";
+export type AcceptedPaymentsType = "boleto" | "pix" | "cash" | "card" | "deposit";

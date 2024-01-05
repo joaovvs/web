@@ -10,12 +10,16 @@ import { VStack, FlatList } from "native-base";
 import { api } from "@services/api";
 import { ProductDTO } from "@dtos/ProductDTO";
 import { Loading } from "@components/Loading";
+import { useAuth } from "@hooks/useAuth";
 
 
 
 export function Home(){
     const [isLoading, setIsLoading] = useState(true);
     const [products, setProducts] = useState<ProductDTO []>([]);
+
+
+    const { user } = useAuth();
     
     async function fetchProducts(){
         try {
@@ -40,7 +44,7 @@ export function Home(){
     
     return(
         <VStack flex={1} mt={6}  p={6} bg={"gray.600"}>
-            <HomeHeader/>
+            <HomeHeader user={user} />
             <Sell/>
             <Search/>
             {isLoading ? <Loading/> : 
@@ -56,8 +60,7 @@ export function Home(){
             flex={1}
             mt={7}
         />
-            }
-                
+            }       
         </VStack>
     );
 }

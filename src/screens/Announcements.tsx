@@ -10,6 +10,7 @@ import {
   Select,
   Text,
   FlatList,
+  useToast,
 } from "native-base";
 import { Plus } from "phosphor-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,6 +20,7 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ProductDTO } from "@dtos/ProductDTO";
 import { Loading } from "@components/Loading";
 import { api } from "@services/api";
+import { AppError } from "@utils/AppError";
 
 
 export function Announcements() {
@@ -29,6 +31,8 @@ export function Announcements() {
 
   const [filter, setFilter] = useState("all");
 
+  const toast = useToast();
+
   function handleCreate(){
     navigation.navigate('create');
   }
@@ -37,13 +41,24 @@ export function Announcements() {
     try {
       setIsLoading(true);
 
-      const result = await api.get('user/products');
+      const result = await api.get('users/products');
       
       console.log(result.data);
+        if(result.data){
       setUserProducts(result.data);
+      }
       
     } catch (error) {
-      console.log(error);
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar seus anúncios, tente novamente mais tarde.";
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
     }finally{
       setIsLoading(false);
     }
@@ -52,6 +67,7 @@ export function Announcements() {
   useFocusEffect(useCallback(()=>{
     fetchUserProducts();
   },[]));
+
   return (
     <SafeAreaView style={{flex: 1, paddingTop: 24,  paddingLeft:24, paddingRight:24 }}>
       <HStack pl={8} mb={8}>
@@ -77,7 +93,7 @@ export function Announcements() {
           data={userProducts}
           keyExtractor={(item) => item.id}
           numColumns={2}
-          renderItem={({item}) => <Card product={item}/>}
+          renderItem={({item}) => <Card product={item} showUserAvatar={false}/>}
           showsVerticalScrollIndicator={false}
           columnWrapperStyle={{ gap: 10 }}
           flex={1}

@@ -25,6 +25,9 @@ export function TextArea({errorMessage = null, isInvalid, ...rest}: Props){
                     borderWidth: 1
                 }}
                 {...rest}            />
+                            <FormControl.ErrorMessage _text={{color: 'red.300'}}>
+                {errorMessage}
+            </FormControl.ErrorMessage>
         </FormControl>
     )
 }

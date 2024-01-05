@@ -14,11 +14,12 @@ import { ImageSquare } from "phosphor-react-native";
 
 type ProductCardProps = IPressableProps & {
   product: ProductDTO;
+  showUserAvatar?: boolean;
 }
 
 
 
-export function Card({product, ...rest}: ProductCardProps) {
+export function Card({product,showUserAvatar=true,...rest}: ProductCardProps) {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   function handleShowDetails(){
@@ -37,7 +38,7 @@ export function Card({product, ...rest}: ProductCardProps) {
       {...rest}
     >
       <Box>
-        {product.product_images?.length>0  ?
+        {product.product_images && product.product_images?.length>0  ?
         <Image
           w={150}
           h={100}
@@ -57,7 +58,7 @@ export function Card({product, ...rest}: ProductCardProps) {
         </Box >       
       }
         
-        
+       { showUserAvatar &&
         <ProfileImage
           source={product.user?.avatar ? {  uri: `${api.defaults.baseURL}/images/${product.user.avatar}`}: productImg}
           borderWidth={1}
@@ -66,7 +67,8 @@ export function Card({product, ...rest}: ProductCardProps) {
           left={1}
           size={6}
         />
-        <Tag type={product.is_new ? 'new': 'used'} variant="blue" position="absolute" top={1} right={1} />
+        } 
+        <Tag type={product.is_new ? 'new': 'used'} variant={product.is_new ? "blue": "black"} position="absolute" top={1} right={1} />
 
         {product.is_active !==false &&(
           <Box
@@ -110,7 +112,7 @@ export function Card({product, ...rest}: ProductCardProps) {
         color={product.is_active===false ? "gray.400": "gray.200"}
         numberOfLines={1}
       >
-        <Text fontSize={"xs"}>R$</Text> {product.price}
+        <Text fontSize={"xs"}>R$</Text> {product.price.toLocaleString("pt",{style: "currency", currency:"BRL", signDisplay: "never"})}
       </Text>
     </Pressable>
   );

@@ -4,10 +4,18 @@ import { ProfileImage } from "./ProfileImage";
 
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { UserDTO } from "@dtos/UserDTO";
+import { api } from "@services/api";
 
-export function HomeHeader() {
+type HomeHeaderProps = {
+  user: UserDTO;
+}
+
+export function HomeHeader({user}: HomeHeaderProps) {
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+
 
   function handleCreateAnnouncement(){
     navigation.navigate('create');
@@ -19,11 +27,11 @@ export function HomeHeader() {
         <ProfileImage
           w={45}
           h={45}
-          source={{ uri: "https://github.com/joaovvs.png" }}
+          source={{ uri: `${api.defaults.baseURL}/images/${user.avatar}`}}
         />
         <VStack ml={2} >
           <Text fontFamily={"body"} fontSize={"md"} color={'gray.100'}>Boas vindas,</Text>
-          <Text fontFamily={"heading"} fontSize={"md"} color={'gray.100'}>Usuário!</Text>
+          <Text fontFamily={"heading"} fontSize={"md"} color={'gray.100'}>{user.name}</Text>
         </VStack>
       </HStack>
 

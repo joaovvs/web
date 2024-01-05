@@ -18,16 +18,13 @@ import { Input } from "@components/Input";
 
 import { useForm, Controller } from "react-hook-form";
 import { TextArea } from "@components/TextArea";
-import { RadioButton } from "@components/RadioButton";
-import { Toggle } from "@components/Toggle";
 import { Button } from "@components/Button";
 import { AcceptedPaymentsType } from "src/@types/payments";
-import { Checkbox } from "@components/Checkbox";
+
 
 import * as ImagePicker from "expo-image-picker";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { AnnouncementObject } from "src/@types/announcement";
-
+import { ProductDTO } from "@dtos/ProductDTO";
 
 type RouteParamsProps = {
   id: string;
@@ -43,7 +40,7 @@ export function Edit() {
 
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
   const [announcementPhotos, setAnnouncementPhotos] = useState<string []>([]);
-  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject);
+  const [product, setProduct] = useState<ProductDTO>({} as ProductDTO);
 
   const route = useRoute();
 
@@ -60,11 +57,11 @@ export function Edit() {
 
 
   function handleShowDetail(){
-    navigation.navigate('details', {id});
+    navigation.navigate('details', {id: product.id});
   }
 
   function handlePreview(){
-    navigation.navigate("preview", {announcement})
+    navigation.navigate("preview", {id: product.id})
   }
 
 
@@ -227,17 +224,7 @@ export function Edit() {
           />
 
           <HStack mb={8}>
-            <RadioButton
-              title="Produto novo"
-              isChecked={productType === "new"}
-              onPress={() => setProductType("new")}
-            />
 
-            <RadioButton
-              title="Produto usado"
-              isChecked={productType === "used"}
-              onPress={() => setProductType("used")}
-            />
           </HStack>
 
           <Heading
@@ -272,11 +259,6 @@ export function Edit() {
             Aceita troca?
           </Heading>
 
-          <Toggle
-            onPress={() => setAcceptTrade(!acceptTrade)}
-            isPressed={acceptTrade}
-          />
-
           <Heading
             fontFamily={"heading"}
             fontSize={"sm"}
@@ -290,9 +272,9 @@ export function Edit() {
             <Checkbox
               title="Boleto"
               isChecked={
-                !!selectedPaymentsModes.find((mode) => mode === "ticket")
+                !!selectedPaymentsModes.find((mode) => mode === "boleto")
               }
-              onPress={() => toggleSelectedPayments("ticket")}
+              onPress={() => toggleSelectedPayments("boleto")}
             />
 
             <Checkbox
