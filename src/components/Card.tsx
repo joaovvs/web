@@ -19,14 +19,12 @@ type ProductCardProps = IPressableProps & {
 
 
 
-export function Card({product,showUserAvatar=true,...rest}: ProductCardProps) {
+export function Card({product, showUserAvatar=true, ...rest}: ProductCardProps) {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  function handleShowDetails(){
-    navigation.navigate("details", {id: product.id});
+  function handleShowDetails(id: string){
+    navigation.navigate("details", {id});
   }
-
-  console.log(product);
 
   return (
     <Pressable
@@ -34,7 +32,7 @@ export function Card({product,showUserAvatar=true,...rest}: ProductCardProps) {
       position={"relative"}
       borderRadius={"lg"}
       marginBottom={5}
-      onPress={handleShowDetails}
+      onPress={() => handleShowDetails(product.id)}
       {...rest}
     >
       <Box>
@@ -70,10 +68,10 @@ export function Card({product,showUserAvatar=true,...rest}: ProductCardProps) {
         } 
         <Tag type={product.is_new ? 'new': 'used'} variant={product.is_new ? "blue": "black"} position="absolute" top={1} right={1} />
 
-        {product.is_active !==false &&(
+        {product.is_active===false  &&(
           <Box
             flex={1}
-            bg={"gray.100:alpha"}
+            bg={"gray.100"}
             opacity={0.5}
             alignItems={"flex-end"}
             borderRadius={"lg"}

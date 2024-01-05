@@ -24,17 +24,13 @@ export function Home(){
     async function fetchProducts(){
         try {
             setIsLoading(true);
-
             const response = await api.get('/products');
-
-
             setProducts(response.data);
-
-            console.log(response)
         } catch (error) {
             
         }finally{
             setIsLoading(false);
+            products.map(product=> console.log( product));
         }
     }
 
@@ -49,12 +45,10 @@ export function Home(){
             <Search/>
             {isLoading ? <Loading/> : 
             <FlatList
-            data={products}
+            data={products ? products : []}
             keyExtractor={(item) => item.id}
             numColumns={2}
-            renderItem={({item})=> (products &&
-                <Card key={item.id} product={item} />
-            )}
+            renderItem={({item})=> <Card product={item} />}
             showsVerticalScrollIndicator={false}
             columnWrapperStyle={{gap: 10}}
             flex={1}

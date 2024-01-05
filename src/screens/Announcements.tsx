@@ -42,10 +42,9 @@ export function Announcements() {
       setIsLoading(true);
 
       const result = await api.get('users/products');
-      
-      console.log(result.data);
-        if(result.data){
-      setUserProducts(result.data);
+
+      if(result.data){
+        setUserProducts(result.data);
       }
       
     } catch (error) {
@@ -90,7 +89,7 @@ export function Announcements() {
         </HStack>
         { isLoading ? <Loading/> : 
         <FlatList
-          data={userProducts}
+          data={userProducts ? userProducts : []}
           keyExtractor={(item) => item.id}
           numColumns={2}
           renderItem={({item}) => <Card product={item} showUserAvatar={false}/>}

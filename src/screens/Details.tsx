@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ProfileImage } from "@components/ProfileImage";
 import { Tag } from "@components/Tag";
-import { Dimensions, SafeAreaView, View } from "react-native";
+import { Dimensions, SafeAreaView, View, Linking } from "react-native";
 import {
   HStack,
   Image,
@@ -13,11 +13,9 @@ import {
   Pressable,
   Box,
 } from "native-base";
-import productImg from "@assets/product.png";
 
 import { ArrowLeft, PencilSimpleLine } from "phosphor-react-native";
 import { Payments } from "@components/Payments";
-import { AcceptedPaymentsType } from "src/@types/payments";
 import { Button } from "@components/Button";
 
 import Animated, {
@@ -27,11 +25,14 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useFocusEffect, useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import Carousel from "react-native-reanimated-carousel";
-import { AnnouncementObject } from "src/@types/announcement";
+import { ProductDTO } from "@dtos/ProductDTO";
+import { api } from "@services/api";
+import { useAuth } from "@hooks/useAuth";
+import { Loading } from "@components/Loading";
 
 
 type RouteParamsProps = {
@@ -39,17 +40,11 @@ type RouteParamsProps = {
 };
 
 export function Details() {
-  const [acceptedPaymentsType, setAcceptedPaymentsType] = useState<
-    AcceptedPaymentsType []
-  >([
-    "ticket",
-    "pix",
-    "cash",
-    "card",
-    "deposit"
-  ]);
+  const [productIsLoading, setProductIsLoading] = useState(true);
 
-  const [announcement, setAnnouncement] = useState<AnnouncementObject>({} as AnnouncementObject);
+  const [product, setProduct] = useState<ProductDTO>({} as ProductDTO);
+
+  const [isOwner, setIsOwner] = useState(false);
 
   const route = useRoute();
 
@@ -57,15 +52,8 @@ export function Details() {
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  const isActive = true;
-
-  const [images, setImages] = useState([
-    productImg,
-    productImg,
-    productImg,
-    productImg,
-  ]);
   const theme = useTheme();
+  const {user} = useAuth();
 
   const progressValue = useSharedValue<number>(0);
   const width = Dimensions.get("window").width;
@@ -142,7 +130,13 @@ export function Details() {
   };
 
   function checkUserIsOwner() {
-    return true;
+    if(product.user){
+      if(user.id =product.user.user_id){
+        setIsOwner(true);
+      }
+    }else{
+      setIsOwner(false);
+    }
   }
 
   function handleGoBack(){
@@ -150,10 +144,55 @@ export function Details() {
   }
 
   function handleEdit(){
-    navigation.navigate('edit', {announcement})
+    navigation.navigate('edit', {id: product.id})
   }
 
+  async function handleWhatsAppContact(){
+
+    try {
+        const url = `https://wa.me/${product.user?.tel}`
+        const support = await Linking.canOpenURL(url);
+
+        if(support){
+          await Linking.openURL(url);
+        }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function fetchProduct(){
+    try {
+      setProductIsLoading(true);
+
+      const response = await api.get(`/products/${id}`);
+      
+      if(response.data){
+        setProduct(response.data);
+      }
+      
+    } catch (error) {
+      
+    }finally{
+      setProductIsLoading(false);
+    }
+  }
+
+
+  useEffect(()=>{
+    fetchProduct();
+  },[id]);
+
+  useEffect(()=>{
+    checkUserIsOwner();
+  },[product]);
+
+  if(productIsLoading){
+    return <Loading/>
+  }else{
+
   return (
+
       <SafeAreaView style={{flex: 1, paddingTop: 24}}>
 
       {/* Header*/}
@@ -163,7 +202,7 @@ export function Details() {
           <ArrowLeft  color={theme.colors.gray[100]} size={24}/>
         </Pressable>
 
-        {checkUserIsOwner() && (
+        {isOwner && (
           <Pressable alignItems={"center"} background={"transparent"} p={0} onPress={handleEdit}>
             <PencilSimpleLine color={theme.colors.gray[100]} size={24} />
           </Pressable>
@@ -183,20 +222,19 @@ export function Details() {
             width={width}
             height={280}
             autoPlay={false}
-            data={images}
+            data={product.product_images ? product.product_images : []}
             pagingEnabled={true}
             onProgressChange={(_, absoluteProgress) =>
               (progressValue.value = absoluteProgress)
             }
             scrollAnimationDuration={1000}
-            onSnapToItem={(index) => console.log("current index:", index)}
-            renderItem={({ item, index }) => (
-              <Image source={item} alt="Foto do item" resizeMode="cover"/>
+            renderItem={({ item }) => (
+              <Image w={375} h={280} source={{uri: `${api.defaults.baseURL}/images/${item.path}`}} alt="Foto do item" resizeMode="cover"/>
             )}
           />
 
           {/*Overflow image if is not active*/}
-          {!isActive && (
+          {!product.is_active && (
             <Box
               bg={"gray.100"}
               opacity={0.6}
@@ -207,7 +245,7 @@ export function Details() {
               left={0}
             />
           )}
-          {!isActive && (
+          {!product.is_active && (
             <Text
               position={"absolute"}
               textTransform={"uppercase"}
@@ -220,14 +258,14 @@ export function Details() {
           )}
         </Box>
         <HStack justifyContent={"center"} mt={-2} mb={2}>
-          {images.map((item, index) => {
+          {product.product_images && product.product_images.map(({id}, index) => {
             return (
               <PaginationItem
                 animValue={progressValue}
                 index={index}
                 isRotate={false}
-                key={index}
-                length={images.length}
+                key={id}
+                length={product.product_images ? product.product_images.length : 0}
               />
             );
           })}
@@ -237,18 +275,18 @@ export function Details() {
           {/* Authors */}
           <HStack alignItems={"center"} mt={5} mb={7}>
             <ProfileImage
-              source={{ uri: "https://github.com/joaovvs.png" }}
+              source={{ uri: `${api.defaults.baseURL}/images/${product.user?.avatar}` }}
               size={7}
               mr={2}
               borderWidth={2}
             />
             <Text color={"gray.100"} fontFamily={"body"} fontSize={"sm"}>
-              Makenna Baptista
+              {product.user?.name}
             </Text>
           </HStack>
 
           <VStack alignItems={"flex-start"} mb={2}>
-            <Tag variant="gray" type="new" />
+            <Tag variant="gray" type={product.is_new ? "new" : "used"} />
           </VStack>
 
           <HStack alignItems={"center"}>
@@ -259,11 +297,11 @@ export function Details() {
               fontSize={"lg"}
               color={"gray.100"}
             >
-              Bicicleta
+              {product.name}
             </Heading>
             <Text fontSize={"lg"} color={"blue.300"} fontFamily={"heading"}>
               <Text fontSize={"sm"}>{"R$ "}</Text>
-              120,00
+              {product.price}
             </Text>
           </HStack>
 
@@ -273,10 +311,7 @@ export function Details() {
             color={"gray.200"}
             textAlign={"justify"}
           >
-            Cras congue cursus in tortor sagittis placerat nunc, tellus arcu.
-            Vitae ante leo eget maecenas urna mattis cursus. Mauris metus amet
-            nibh mauris mauris accumsan, euismod. Aenean leo nunc, purus iaculis
-            in aliquam.
+            {product.description ? product.description : "Produto não possui descrição"}
           </Text>
 
           <HStack mt={7} mb={4}>
@@ -284,7 +319,7 @@ export function Details() {
               Aceita troca?
             </Text>
             <Text fontSize={"sm"} fontFamily={"body"} color={"gray.200"} ml={2}>
-              Sim
+              {product.accept_trade ? "Sim" : "Não"}
             </Text>
           </HStack>
 
@@ -297,16 +332,15 @@ export function Details() {
             >
               Meios de pagamento:
             </Heading>
-            {acceptedPaymentsType &&
-              acceptedPaymentsType.map((item, index) => (
-                <Payments key={index} type={item}/>
+            {product.payment_methods.map((item, index) => (
+                <Payments key={index} type={item.key} name={item.name}/>
               ))}
           </VStack>
         </ScrollView>
       </VStack>
       {/* Footer Menu */}
 
-      {!checkUserIsOwner() ? (
+      {!isOwner ? (
         <HStack
           bgColor={"gray.700"}
           px={7}
@@ -321,13 +355,13 @@ export function Details() {
             color={"blue.500"}
             fontFamily={"heading"}
           >
-            <Text fontSize={"sm"}>R$</Text>120,00
+            <Text fontSize={"sm"}>{"R$ "}</Text>{product.price}
           </Text>
-          <Button title="Entrar em contato" type="contact" variant={"blue"} />
+          <Button title="Entrar em contato" type="contact" variant={"blue"} onPress={handleWhatsAppContact}/>
         </HStack>
       ) : (
         <VStack h={140} bgColor={"gray.700"} px={7} py={5}>
-          {isActive ? (
+          {product.is_active ? (
             <Button
               title="Desativar anúncio"
               variant={"black"}
@@ -348,4 +382,5 @@ export function Details() {
 
     </SafeAreaView>
   );
+  }
 }

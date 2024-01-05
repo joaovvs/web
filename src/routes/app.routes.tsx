@@ -51,8 +51,6 @@ export function AppRoutes() {
           paddingTop: theme.sizes[5],
           paddingBottom: theme.sizes[7],
           paddingHorizontal: theme.sizes[12],
-          alignContent: "center",
-          justifyContent: "center",
         },
       }}
     >
@@ -79,7 +77,7 @@ export function AppRoutes() {
       <Screen
         name="details"
         component={Details}
-        options={{ tabBarButton: () => null }}
+        options={{ tabBarStyle: {display: "none" },  tabBarButton: ()=> null }}
       />
 
       <Screen
@@ -104,11 +102,7 @@ export function AppRoutes() {
         name="exit"
         component={Home}
         options={{
-          tabBarButton: () => (
-            <Pressable onPress={signOut}>
-              <SignOut color={theme.colors.red[300]} />
-            </Pressable>
-          ),
+          tabBarButton: ()=> <Pressable bgColor={"black"} onPress={signOut} ><SignOut color={theme.colors.red[300]}/></Pressable>
         }}
       />
     </Navigator>

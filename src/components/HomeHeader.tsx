@@ -4,11 +4,11 @@ import { ProfileImage } from "./ProfileImage";
 
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
-import { UserDTO } from "@dtos/UserDTO";
 import { api } from "@services/api";
+import { UserData } from "src/@types/userData";
 
 type HomeHeaderProps = {
-  user: UserDTO;
+  user: UserData;
 }
 
 export function HomeHeader({user}: HomeHeaderProps) {

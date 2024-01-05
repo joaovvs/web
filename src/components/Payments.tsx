@@ -3,14 +3,15 @@ import { Barcode, QrCode, Bank, Money, CreditCard } from "phosphor-react-native"
 import { AcceptedPaymentsType } from "src/@types/payments";
 
 type PaymentsProps = {
-    type: AcceptedPaymentsType
+    type: AcceptedPaymentsType;
+    name: string;
 }
 
-export function Payments( {type} : PaymentsProps){
+export function Payments( {type, name} : PaymentsProps){
 
 
     function switchIconByPaymentType(){
-        const iconSize = 18
+        const iconSize = 20
         switch (type){
             case "boleto":
                 return <Barcode size={iconSize}/>
@@ -25,24 +26,10 @@ export function Payments( {type} : PaymentsProps){
         }
     }
 
-    function switchTextByPaymentType(){
-        switch (type){
-            case "boleto":
-                return "Boleto"
-            case "pix":
-                return "Pix"
-            case 'cash':
-                return "Dinheiro"
-            case 'card':
-                return "Cartão de crédito"
-            case "deposit":
-                return "Depósito Bancário"
-        }
-    }
     return(
-        <HStack >
+        <HStack alignItems={"center"} paddingY={2}>
             {switchIconByPaymentType()}
-            <Text fontSize={"sm"} fontFamily={"body"} color={"gray.200"} ml={2} mb={1}>{switchTextByPaymentType()}</Text>
+            <Text fontSize={"sm"} fontFamily={"body"} color={"gray.200"} ml={2} mb={1}>{name}</Text>
         </HStack>
     )
 }
